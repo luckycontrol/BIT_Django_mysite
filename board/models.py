@@ -22,12 +22,14 @@ def fetchlist(num):
     cursor.execute('''
         select count(*) as count from board
     ''')
-    board_count = cursor.fetchone()
+    board_count = cursor.fetchone()     # 총 게시물 수
+    top_board_no = board_count['count'] - (int(num) - 1) * 5  # n번째 페이지의 맨 상단 게시물 번호
+    board_count_range = range(1, board_count['count'] // 5 + 2)     # 하단 페이지 인덱스들
 
     cursor.close()
     db.close()
 
-    return [board_list, board_count]
+    return [board_list, top_board_no, list(board_count_range)]
 
 # 게시판 게시물을 클릭했을 때, 해당 게시물의 내용을 가져온다.
 def fetch_board(no):
@@ -101,6 +103,20 @@ def add(title, content, author, g_no, o_no, depth, user_no):
     cursor.execute('''
         insert into board values(null, %s, %s, %s, 0, now(), %s, %s, %s, %s)          
     ''', [title, content, author, g_no, o_no, depth, user_no])
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+# 조회수 업데이트
+def update_view_count(no, view_count):
+    db = conn()
+    cursor = db.cursor(DictCursor)
+
+    cursor.execute('''
+        update board set view = %s
+        where no = %s;
+    ''', [int(view_count) + 1, no])
     db.commit()
 
     cursor.close()

@@ -26,6 +26,6 @@ def board_models_depth():
     result = board_models.get_max_depth(1, 1)
     print(result)
 
-board_models_o_no()
+board_models_fetchTest()
 
 

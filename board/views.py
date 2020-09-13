@@ -1,13 +1,14 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
-from board.models import fetchlist, fetch_board, get_max_g_no, get_max_o_no, get_max_depth, add
+from board.models import fetchlist, fetch_board, get_max_g_no, get_max_o_no, get_max_depth, add, update_view_count
 
 # Create your views here.
 def list(request):
     page_no = request.GET['page_no']
     data = fetchlist(page_no)
-    board_data = {'board_list': data[0], 'board_count': data[1]}
+
+    board_data = {'board_list': data[0], 'board_count': data[1], 'board_count_range': data[2]}
 
     return render(request, 'board/list.html', board_data)
 
@@ -16,7 +17,12 @@ def write(request):
 
 def view(request):
     no = request.GET['no']
+    view_count = request.GET['view_count']
+
+    update_view_count(no=no, view_count=view_count)
+
     data = fetch_board(no)
+
     board_data = {'board_list': data}
     return render(request, 'board/view.html', board_data)
 

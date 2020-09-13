@@ -24,9 +24,9 @@
 					</tr>
 					{% for board in board_list %}
 					<tr>
-						<td>{{ board_count.count | sub:forloop.counter | add:1 }}</td>
+						<td> {{ board_count | sub:forloop.counter | add:1 }} </td>
 						<td style="text-align: left; padding-left: {{ board.depth | sub:1 | mul:10 }}px ">
-							<a href="/board/view?no={{ board.no }}&&page_no={{ request.GET.page_no }}">
+							<a href="/board/view?no={{ board.no }}&&view_count={{ board.view }}&&page_no={{ request.GET.page_no }}">
 								{% if board.o_no > 1%}
 								<img src="/assets/images/reply.png">
 								{% endif %}
@@ -45,8 +45,8 @@
 				<div class="pager">
 					<ul>
 						<li><a href="">◀</a></li>
-						{% for index in board_count %}
-						<li><a href="/board/list?page_no={{ index }}">{{ board_count.count }}</a></li>
+						{% for count in board_count_range %}
+						<li><a href="/board/list?page_no={{ count }}">{{ count }}</a></li>
 						{% endfor %}
 						<li><a href="">▶</a></li>
 					</ul>
